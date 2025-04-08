@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noko's Fruit Feast</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://cdn.pixabay.com/photo/2018/01/09/09/40/japanese-3062679_960_720.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-top: 20px;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    #fruit-counter {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    button {
+      padding: 1rem 2rem;
+      margin: 0.5rem;
+      border: none;
+      background: #ffb347;
+      color: white;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ffa033;
+    }
+
+    #noko {
+      width: 100px;
+      height: 100px;
+      background: url('https://cdn.pixabay.com/photo/2016/03/31/21/23/big-eye-1291247_960_720.jpg') no-repeat center center;
+      background-size: contain;
+      position: fixed;
+      bottom: 80px;
+      animation: eatFruit 1s ease-out infinite;
+    }
+
+    /* Animation for Noko eating fruits */
+    @keyframes eatFruit {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* Animations for fruit dropping */
+    .fruit {
+      position: absolute;
+      bottom: 100px;
+      animation: dropFruit 1s ease-out forwards;
+    }
+
+    @keyframes dropFruit {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(100px); }
+    }
+
+    /* Ghost Animation */
+    .ghost {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      animation: ghostMove 2s infinite alternate;
+      background: url('https://cdn.pixabay.com/photo/2017/10/17/07/29/ghost-2853526_960_720.png') no-repeat center center;
+      background-size: contain;
+    }
+
+    @keyframes ghostMove {
+      0% { transform: translateX(0) translateY(0); }
+      100% { transform: translateX(20px) translateY(-20px); }
+    }
+
+    .ghost-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #stopwatch-icon {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      background: url('https://cdn.pixabay.com/photo/2017/11/29/15/05/stopwatch-2981611_960_720.png') no-repeat center center;
+      background-size: contain;
+      margin: 20px;
+    }
+
+    #clock {
+      font-size: 2rem;
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    #pause-btn {
+      padding: 10px 20px;
+      background-color: #ffb347;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 10px;
+    }
+
+    #pause-btn:hover {
+      background-color: #ffa033;
+    }
+
+    #rain-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    #rain-btn:hover {
+      background-color: #34495e;
+    }
+
+    #burger-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: url('https://cdn.pixabay.com/photo/2016/11/29/04/31/burger-1867953_960_720.png') no-repeat center center;
+      background-size: cover;
+      cursor: pointer;
+    }
+
+    #book-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #ffb347;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    #book-btn:hover {
+      background-color: #ffa033;
+    }
+
+    #book-modal {
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      width: 80%;
+      color: white;
+      border-radius: 10px;
+      display: none;
+      z-index: 100;
+    }
+
+    #book-modal h2 {
+      margin-bottom: 20px;
+    }
+
+    #book-modal p {
+      line-height: 1.6;
+    }
+
+    #close-book {
+      background-color: #ffb347;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Noko's Fruit Feast</h1>
+  <div id="fruit-counter">Fruits: 0</div>
+  <button onclick="gatherFruit()">Feed Noko a Fruit</button>
+
+  <div id="noko"></div>
+  <div class="ghost-container"></div>
+
+  <div id="stopwatch-icon"></div>
+  <div id="clock">00:00:00</div>
+  <button id="pause-btn">Pause Clock</button>
+
+  <button id="rain-btn" onclick="toggleRainNight()">Rain/Night Toggle</button>
+
+  <div id="burger-btn" onclick="activateDoubleFruit()"></div>
+
+  <button id="book-btn" onclick="openBook()">Game Book</button>
+
+  <div id="book-modal">
+    <h2>Game Book</h2>
+    <p><strong>Fruits:</strong> Click the "Feed Noko a Fruit" button to gather fruits.</p>
+    <p><strong>Upgrades:</strong> Use fruits to buy upgrades from Oni's shop to improve Noko's abilities. Items like the Zen Garden increase the fruit collection rate.</p>
+    <p><strong>Clock:</strong> The clock shows real-time. You can pause it with the "Pause Clock" button.</p>
+    <p><strong>Spirit Orbs:</strong> When you enter the Underworld, you collect Spirit Orbs. Be careful—yo-kai may steal them!</p>
+    <p><strong>Burger:</strong> Click the burger icon to double your fruits for 2 minutes.</p>
+    <p><strong>Night/Rain Toggle:</strong> The button switches between night and day, adding rain during the night.</p>
+    <button id="close-book" onclick="closeBook()">Close</button>
+  </div>
+
+  <audio id="tick-sound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+  <audio id="overworld-music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
+  <audio id="underworld-music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" preload="auto" loop></audio>
+
+  <script>
+    let fruits = 0;
+    let clockInterval;
+    let clockRunning = false;
+    let rainActive = false;
+    let doubleFruitActive = false;
+
+    const fruitsPerSecond = 1;
+    let fruitTimer = 0;
+
+    function updateCounter() {
+      document.getElementById("fruit-counter").textContent = `F
